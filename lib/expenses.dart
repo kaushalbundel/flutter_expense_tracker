@@ -1,4 +1,6 @@
+import 'package:expense_tracker/expense_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/models/expense.dart';
 
 /*
 The objective of this widget is to  capture all the related widgets from where:
@@ -7,6 +9,10 @@ The objective of this widget is to  capture all the related widgets from where:
 2. Expenses can be added
 3. Expenses can be shown in a list view
 4. Expenses can be deleted
+
+Main Tasks:
+
+1. All other required states will be uplifted to this state. Why? Since this state is common to all of the needed widgets.
 */
 
 class Expenses extends StatefulWidget {
@@ -19,6 +25,33 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
+  // dummy data
+  final List<DataExpense> registeredExpenses = [
+    DataExpense(
+      title: "Medical-Fever",
+      amount: 500.0,
+      date: DateTime.now(),
+      category: Category.personal,
+    ),
+    DataExpense(
+      title: "Utilities-Electricity",
+      amount: 1999,
+      date: DateTime.now(),
+      category: Category.home,
+    ),
+    DataExpense(
+      title: "Outing",
+      amount: 4000,
+      date: DateTime.now(),
+      category: Category.home,
+    ),
+    DataExpense(
+      title: "Client-Dinner",
+      amount: 500.0,
+      date: DateTime.now(),
+      category: Category.client,
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,12 +60,14 @@ class _ExpensesState extends State<Expenses> {
           title: const Text("Expenses"),
           backgroundColor: Colors.blue,
         ),
-        body: const Center(
+        body: Center(
           child: Column(
             children: [
-              Text("Graph Widget space"),
-              SizedBox(height: 20),
-              Text("List View space"),
+              const Text("Graph Widget space"),
+              const SizedBox(height: 20),
+              const Text("List View space"),
+              const Text("Random Check"),
+              ExpenseListView(listExpenses: registeredExpenses),
             ],
           ),
         ),
