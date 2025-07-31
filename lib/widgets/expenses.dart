@@ -52,22 +52,35 @@ class _ExpensesState extends State<Expenses> {
       category: Category.client,
     ),
   ];
+
+  // method to add an overlay button when the add button is pressed
+
+  void _addBottomModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return const Text("This is a bottom modal");
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Expenses"),
-          backgroundColor: Colors.blue,
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              const Text("Graph Widget space"),
-              const SizedBox(height: 20),
-              ExpenseListView(listExpenses: registeredExpenses),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Expenses"),
+        backgroundColor: Colors.blue,
+        actions: [
+          IconButton(onPressed: _addBottomModal, icon: const Icon(Icons.add)),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            const Text("Graph Widget space"),
+            const SizedBox(height: 20),
+            ExpenseListView(listExpenses: registeredExpenses),
+          ],
         ),
       ),
     );
