@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/models/expense.dart';
+import 'package:expense_tracker/widgets/expense/expense_card.dart';
 
 /* This class captures the list view of the active expenses on the home screen in a list view. */
 
@@ -16,7 +17,7 @@ class ExpenseListView extends StatelessWidget {
       child: ListView.builder(
         itemCount: listExpenses.length,
         itemBuilder: (ctx, index) {
-          return Text(listExpenses[index].title);
+          return ExpenseCard(expenseValues: listExpenses[index]);
         },
       ),
     );

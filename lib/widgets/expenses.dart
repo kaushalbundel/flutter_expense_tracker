@@ -1,4 +1,4 @@
-import 'package:expense_tracker/expense_list_view.dart';
+import 'package:expense_tracker/widgets/expense/expense_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/models/expense.dart';
 
@@ -65,8 +65,6 @@ class _ExpensesState extends State<Expenses> {
             children: [
               const Text("Graph Widget space"),
               const SizedBox(height: 20),
-              const Text("List View space"),
-              const Text("Random Check"),
               ExpenseListView(listExpenses: registeredExpenses),
             ],
           ),
