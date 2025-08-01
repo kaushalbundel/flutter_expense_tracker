@@ -50,6 +50,10 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
                 },
                 child: const Text("Submit"),
               ),
+              TextButton(
+                onPressed: () {},
+                child: const Text("Close"),
+              ), // TODO: As the form is closed the stored values should disappear
             ],
           ),
         ],
