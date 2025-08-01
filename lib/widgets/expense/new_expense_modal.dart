@@ -16,6 +16,21 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
 
+  void _showDateModal() {
+    final currentDate = DateTime.now();
+    final lastDate = DateTime(
+      currentDate.year + 1,
+      currentDate.month,
+      currentDate.day,
+    );
+
+    showDatePicker(
+      context: context,
+      firstDate: currentDate,
+      lastDate: lastDate,
+    );
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -35,23 +50,49 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
             maxLength: 50,
             controller: _titleController,
           ),
-          TextField(
-            decoration: const InputDecoration(label: Text("Amount (in \$)")),
-            keyboardType: TextInputType.number,
-            maxLength: 7,
-            controller: _amountController,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                flex: 1,
+                child: TextField(
+                  decoration: const InputDecoration(
+                    label: Text("Amount (in \$)"),
+                    prefixText: "\$ ",
+                  ),
+                  keyboardType: TextInputType.number,
+                  maxLength: 7,
+                  controller: _amountController,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                flex: 1,
+                child: Row(
+                  children: [
+                    const Text("Select Date"),
+                    IconButton(
+                      onPressed: _showDateModal,
+                      icon: const Icon(Icons.date_range),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           Row(
             children: [
               ElevatedButton(
                 onPressed: () {
-                  print(_titleController.text);
+                  print(_titleController);
                   print(_amountController.text);
                 },
                 child: const Text("Submit"),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 child: const Text("Close"),
               ), // TODO: As the form is closed the stored values should disappear
             ],
