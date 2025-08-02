@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 /* Data class for capturing Expense related data points */
 
 final uuid = const Uuid();
+var dateFormat =
+    DateFormat.yMd(); // this date format can be globally defined as it does not need in any class
 
 enum Category { home, client, vehicle, personal }
 
@@ -30,6 +32,5 @@ class DataExpense {
   final DateTime date;
   final Category category;
 
-  var dateFormat = DateFormat.yMMM();
   String get formattedDate => dateFormat.format(date);
 }

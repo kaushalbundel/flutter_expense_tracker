@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/models/expense.dart';
 
 /* The class provides the bottom modal for adding new expenses */
-
 class NewExpenseModal extends StatefulWidget {
   const NewExpenseModal({super.key});
 
@@ -15,8 +15,12 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
   // storing the value entered in the text field
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  DateTime? _selectedDate;
+  Category _selectedCategoryValue = Category.client;
 
-  void _showDateModal() {
+  // show date picker is different to the other widgets in as it returns a value from future
+  // Why setState is called? Because we need to print the value on the screen as we recieve that from date picker and that will need a screen rebuild/ state change
+  void _showDateModal() async {
     final currentDate = DateTime.now();
     final lastDate = DateTime(
       currentDate.year + 1,
@@ -24,11 +28,24 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
       currentDate.day,
     );
 
-    showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
       firstDate: currentDate,
       lastDate: lastDate,
     );
+
+    setState(() {
+      _selectedDate = pickedDate;
+    });
+  }
+
+  void _setCategory(Category? value) {
+    if (value == null) {
+      return;
+    }
+    setState(() {
+      _selectedCategoryValue = value;
+    });
   }
 
   @override
@@ -70,13 +87,35 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
                 flex: 1,
                 child: Row(
                   children: [
-                    const Text("Select Date"),
+                    Text(
+                      (_selectedDate == null)
+                          ? "No Date selected"
+                          : dateFormat.format(
+                              _selectedDate!,
+                            ), // since we know that the _selectedDate can not be null, we have put in an additional emphassis with !
+                    ),
                     IconButton(
                       onPressed: _showDateModal,
                       icon: const Icon(Icons.date_range),
                     ),
                   ],
                 ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              DropdownButton(
+                value: _selectedCategoryValue,
+                items: Category.values
+                    .map(
+                      (category) => DropdownMenuItem(
+                        value: category,
+                        child: Text(category.name),
+                      ),
+                    )
+                    .toList(),
+                onChanged: _setCategory,
               ),
             ],
           ),
