@@ -48,6 +48,38 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
     });
   }
 
+  // validating new expense addition and producing an error when an issue is encountered
+  // the function should run when "save expense" button is clicked as the expenses are saved
+  // there is not need to check the category as it comes prefilled but however the logic could be improved
+  void _submitExpenseData() {
+    final enteredAmount = double.tryParse(_amountController.text);
+    final checkEnteredAmount = enteredAmount == null || enteredAmount <= 0
+        ? true
+        : false;
+    if (checkEnteredAmount ||
+        _titleController.text.trim().isEmpty ||
+        _selectedDate == null) {
+      // error
+      showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: const Text("Invalid Response"),
+            content: const Text("Please add correct details and resubmit"),
+            actions: [
+              TextButton(
+                child: const Text("Close"),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -123,8 +155,7 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  print(_titleController);
-                  print(_amountController.text);
+                  _submitExpenseData;
                 },
                 child: const Text("Submit"),
               ),
