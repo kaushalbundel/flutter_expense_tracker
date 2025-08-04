@@ -3,7 +3,9 @@ import 'package:expense_tracker/models/expense.dart';
 
 /* The class provides the bottom modal for adding new expenses */
 class NewExpenseModal extends StatefulWidget {
-  const NewExpenseModal({super.key});
+  const NewExpenseModal({super.key, required this.onExpenseAdd});
+
+  final void Function(DataExpense expense) onExpenseAdd;
 
   @override
   State<NewExpenseModal> createState() {
@@ -51,7 +53,7 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
   // validating new expense addition and producing an error when an issue is encountered
   // the function should run when "save expense" button is clicked as the expenses are saved
   // there is not need to check the category as it comes prefilled but however the logic could be improved
-  void _submitExpenseData() {
+  void _submitExpenseCheck() {
     final enteredAmount = double.tryParse(_amountController.text);
     final checkEnteredAmount = enteredAmount == null || enteredAmount <= 0
         ? true
@@ -78,6 +80,16 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
         },
       );
     }
+    widget.onExpenseAdd(
+      DataExpense(
+        title: _titleController.text,
+        category: _selectedCategoryValue,
+        date: _selectedDate!,
+        amount: enteredAmount!,
+      ),
+    );
+    // to close the popup
+    Navigator.pop(context); // this is not closing the popup and as the button is pressed twice the data is getting stored again
   }
 
   @override
@@ -154,9 +166,7 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
           Row(
             children: [
               ElevatedButton(
-                onPressed: () {
-                  _submitExpenseData;
-                },
+                onPressed: _submitExpenseCheck,
                 child: const Text("Submit"),
               ),
               TextButton(
