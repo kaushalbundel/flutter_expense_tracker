@@ -25,9 +25,9 @@ class ExpenseListView extends StatelessWidget {
         itemCount: listExpenses.length,
         itemBuilder: (ctx, index) => Dismissible(
           onDismissed: (direction) {
-            onRemovalExpense; // test this
+            onRemovalExpense(listExpenses[index]); // test this
           },
-          key: ValueKey(index),
+          key: ValueKey(listExpenses[index]),
           child: ExpenseCard(expenseValues: listExpenses[index]),
         ),
       ),

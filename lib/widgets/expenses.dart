@@ -61,11 +61,30 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
-  // logic for removing the data once the expense is swiped
+  // logic for removing the data once the expense is swiped with an ability to undo the swiping/deletion
   void _expenseRemove(DataExpense expense) {
+    var expenseItemIndex = registeredExpenses.indexOf(expense);
+
     setState(() {
       registeredExpenses.remove(expense);
     });
+    // clear the snackbars if more than one snack bar is opened at a time
+    ScaffoldMessenger.of(context).clearSnackBars();
+    //undo process
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Expense item ${expense.title} is deleted"),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: "Undo",
+          onPressed: () {
+            setState(() {
+              registeredExpenses.insert(expenseItemIndex, expense);
+            });
+          },
+        ),
+      ),
+    );
   }
 
   // method to add an overlay button when the add button is pressed
