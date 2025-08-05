@@ -55,13 +55,12 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
   // there is not need to check the category as it comes prefilled but however the logic could be improved
   void _submitExpenseCheck() {
     final enteredAmount = double.tryParse(_amountController.text);
-    final checkEnteredAmount = enteredAmount == null || enteredAmount <= 0
+    final checkEnteredAmount = (enteredAmount == null || enteredAmount <= 0)
         ? true
         : false;
     if (checkEnteredAmount ||
         _titleController.text.trim().isEmpty ||
         _selectedDate == null) {
-      // error
       showDialog(
         context: context,
         builder: (ctx) {
@@ -79,17 +78,18 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
           );
         },
       );
+    } else {
+      widget.onExpenseAdd(
+        DataExpense(
+          title: _titleController.text,
+          category: _selectedCategoryValue,
+          date: _selectedDate!,
+          amount: enteredAmount,
+        ),
+      );
+      // to close the popup
+      Navigator.pop(context);
     }
-    widget.onExpenseAdd(
-      DataExpense(
-        title: _titleController.text,
-        category: _selectedCategoryValue,
-        date: _selectedDate!,
-        amount: enteredAmount!,
-      ),
-    );
-    // to close the popup
-    Navigator.pop(context); // this is not closing the popup and as the button is pressed twice the data is getting stored again
   }
 
   @override
@@ -102,7 +102,7 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsGeometry.all(12.0),
+      padding: const EdgeInsetsGeometry.fromLTRB(16.0, 32.0, 16.0, 16.0),
       child: Column(
         children: [
           TextField(
@@ -174,7 +174,7 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
                   Navigator.pop(context);
                 },
                 child: const Text("Close"),
-              ), // TODO: As the form is closed the stored values should disappear
+              ),
             ],
           ),
         ],

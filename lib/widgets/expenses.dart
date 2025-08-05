@@ -54,19 +54,43 @@ class _ExpensesState extends State<Expenses> {
     ),
   ];
 
-  // method to add an overlay button when the add button is pressed
+  // logic for getting the data after creating the date in new expense modal
+  void _newSavedExpense(DataExpense newExpense) {
+    setState(() {
+      registeredExpenses.add(newExpense);
+    });
+  }
 
+  // logic for removing the data once the expense is swiped
+  void _expenseRemove(DataExpense expense) {
+    setState(() {
+      registeredExpenses.remove(expense);
+    });
+  }
+
+  // method to add an overlay button when the add button is pressed
   void _addBottomModal() {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (ctx) {
-        return const NewExpenseModal();
+        return NewExpenseModal(onExpenseAdd: _newSavedExpense);
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    // adding a default value to the expense screen so that when there are no expenses there are still some details visible
+    Widget mainContent = const Center(child: Text("Please add new expenses."));
+    // logic for capturing the main content when there are no expense in the expense list (registeredExpenses)
+    if (registeredExpenses.isNotEmpty) {
+      mainContent = ExpenseListView(
+        listExpenses: registeredExpenses,
+        onRemovalExpense: _expenseRemove,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Expenses"),
@@ -80,7 +104,7 @@ class _ExpensesState extends State<Expenses> {
           children: [
             const Text("Graph Widget space"),
             const SizedBox(height: 20),
-            ExpenseListView(listExpenses: registeredExpenses),
+            mainContent,
           ],
         ),
       ),
