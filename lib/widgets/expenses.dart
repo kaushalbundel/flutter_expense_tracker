@@ -113,7 +113,6 @@ class _ExpensesState extends State<Expenses> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Expenses"),
-        backgroundColor: Colors.blue,
         actions: [
           IconButton(onPressed: _addBottomModal, icon: const Icon(Icons.add)),
         ],

@@ -34,7 +34,8 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
       context: context,
       firstDate: currentDate,
       lastDate: lastDate,
-    );
+
+  );
 
     setState(() {
       _selectedDate = pickedDate;
