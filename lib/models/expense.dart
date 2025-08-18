@@ -35,12 +35,11 @@ class DataExpense {
   String get formattedDate => dateFormat.format(date);
 }
 
-// Create the graph
-// graph shows the sum of all value of for each individual category
+// Creating Graph graph shows the sum of all value of for each individual category
 class ExpenseBucket {
   ExpenseBucket({required this.category, required this.expenses});
 
-  // I want a list of all  expenses against each individual category like for all category == client, expense = $200
+  //customized initializer: takes the list of all expenses and creates a separate list where the catogory is the category mentioned
   ExpenseBucket.forCategory(List<DataExpense> allExpenses, this.category)
     : expenses = allExpenses
           .where((expenses) => expenses.category == category)
@@ -51,7 +50,6 @@ class ExpenseBucket {
   final List<DataExpense> expenses;
 
   // getter to get the value of the expense against a specific category
-
   double get totalExpense {
     double sum = 0;
 
