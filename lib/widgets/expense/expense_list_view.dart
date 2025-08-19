@@ -20,16 +20,14 @@ class ExpenseListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // list view builder is used since we do not know the count of expenses that we have along with lazily reproducing the list
-    return Expanded(
-      child: ListView.builder(
-        itemCount: listExpenses.length,
-        itemBuilder: (ctx, index) => Dismissible(
-          onDismissed: (direction) {
-            onRemovalExpense(listExpenses[index]); // test this
-          },
-          key: ValueKey(listExpenses[index]),
-          child: ExpenseCard(expenseValues: listExpenses[index]),
-        ),
+    return ListView.builder(
+      itemCount: listExpenses.length,
+      itemBuilder: (ctx, index) => Dismissible(
+        onDismissed: (direction) {
+          onRemovalExpense(listExpenses[index]); // test this
+        },
+        key: ValueKey(listExpenses[index]),
+        child: ExpenseCard(expenseValues: listExpenses[index]),
       ),
     );
   }

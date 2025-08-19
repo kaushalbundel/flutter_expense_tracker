@@ -2,6 +2,7 @@ import 'package:expense_tracker/widgets/expense/expense_list_view.dart';
 import 'package:expense_tracker/widgets/expense/new_expense_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/models/expense.dart';
+import 'package:expense_tracker/chart/chart.dart';
 
 /*
 The objective of this widget is to  capture all the related widgets from where:
@@ -26,6 +27,7 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
+  // final List<DataExpense> registeredExpenses = [];
   // dummy data
   final List<DataExpense> registeredExpenses = [
     DataExpense(
@@ -51,6 +53,12 @@ class _ExpensesState extends State<Expenses> {
       amount: 500.0,
       date: DateTime.now(),
       category: Category.client,
+    ),
+    DataExpense(
+      title: "Misc ",
+      amount: 500.0,
+      date: DateTime.now(),
+      category: Category.vehicle,
     ),
   ];
 
@@ -103,13 +111,46 @@ class _ExpensesState extends State<Expenses> {
     // adding a default value to the expense screen so that when there are no expenses there are still some details visible
     Widget mainContent = const Center(child: Text("Please add new expenses."));
     // logic for capturing the main content when there are no expense in the expense list (registeredExpenses)
+    // if (registeredExpenses.isNotEmpty) {
+    //   mainContent = ExpenseListView(
+    //     listExpenses: registeredExpenses,
+    //     onRemovalExpense: _expenseRemove,
+    //   );
+    // }
+
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: const Text("Expenses"),
+    //     actions: [
+    //       IconButton(onPressed: _addBottomModal, icon: const Icon(Icons.add)),
+    //     ],
+    //   ),
+    //   body: Column(
+    //     children: [
+    //       Chart(expenses: registeredExpenses),
+    //       const SizedBox(height: 20),
+    //       mainContent,
+    //     ],
+    //   ),
+    // );
     if (registeredExpenses.isNotEmpty) {
-      mainContent = ExpenseListView(
-        listExpenses: registeredExpenses,
-        onRemovalExpense: _expenseRemove,
+      mainContent = Column(
+        children: [
+          Container(
+            height: 250.0,
+            padding: const EdgeInsets.all(16),
+            child: Chart(expenses: registeredExpenses),
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: ExpenseListView(
+              listExpenses: registeredExpenses,
+              onRemovalExpense: _expenseRemove,
+            ),
+          ),
+        ],
       );
     }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Expenses"),
@@ -117,15 +158,7 @@ class _ExpensesState extends State<Expenses> {
           IconButton(onPressed: _addBottomModal, icon: const Icon(Icons.add)),
         ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            const Text("Graph Widget space"),
-            const SizedBox(height: 20),
-            mainContent,
-          ],
-        ),
-      ),
+      body: mainContent,
     );
   }
 }
