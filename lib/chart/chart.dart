@@ -1,3 +1,62 @@
 /* widget for creating chart on the screen*/
 
+import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:expense_tracker/chart/chart_data.dart';
+
+class Chart extends StatelessWidget {
+  const Chart({super.key, required this.expenses});
+
+  final List<DataExpense> expenses;
+
+  @override
+  Widget build(BuildContext context) {
+    final chartData = ChartData(expenses);
+
+    return BarChart(
+      BarChartData(
+        titlesData: FlTitlesData(
+          show: true,
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) {
+                final category = chartData.buckets[value.toInt()].category;
+                return SideTitleWidget(
+                  meta: meta,
+                  child: Icon(categoryIcons[category]),
+                );
+              },
+            ),
+          ),
+          leftTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: true, reservedSize: 40),
+          ),
+        ),
+        borderData: FlBorderData(show: false),
+        gridData: const FlGridData(show: false),
+        barGroups: List.generate(chartData.buckets.length, (index) {
+          final bucket = chartData.buckets[index];
+          return BarChartGroupData(
+            x: index,
+            barRods: [
+              BarChartRodData(
+                toY: bucket.totalExpense,
+                width: 20,
+                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ],
+          );
+        }),
+      ),
+    );
+  }
+}
