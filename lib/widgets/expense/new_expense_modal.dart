@@ -34,8 +34,7 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
       context: context,
       firstDate: currentDate,
       lastDate: lastDate,
-
-  );
+    );
 
     setState(() {
       _selectedDate = pickedDate;
@@ -102,83 +101,99 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsGeometry.fromLTRB(16.0, 32.0, 16.0, 16.0),
-      child: Column(
-        children: [
-          TextField(
-            decoration: const InputDecoration(label: Text("Title")),
-            keyboardType: TextInputType.name,
-            maxLength: 50,
-            controller: _titleController,
+    // Issue: In Landscape mode the keyboard blocks the view as we enter data in the modal
+    // There needs to be a gap between the modal and the keyboard
+
+    final keyboardPadding = MediaQuery.of(
+      context,
+    ).viewInsets.bottom; // gets the padding from the keyboard
+    return SizedBox(
+      height: double.infinity,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsetsGeometry.fromLTRB(
+            16.0,
+            48.0,
+            16.0,
+            keyboardPadding + 16.0,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          child: Column(
             children: [
-              Expanded(
-                flex: 1,
-                child: TextField(
-                  decoration: const InputDecoration(
-                    label: Text("Amount (in \$)"),
-                    prefixText: "\$ ",
-                  ),
-                  keyboardType: TextInputType.number,
-                  maxLength: 7,
-                  controller: _amountController,
-                ),
+              TextField(
+                decoration: const InputDecoration(label: Text("Title")),
+                keyboardType: TextInputType.name,
+                maxLength: 50,
+                controller: _titleController,
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                flex: 1,
-                child: Row(
-                  children: [
-                    Text(
-                      (_selectedDate == null)
-                          ? "No Date selected"
-                          : dateFormat.format(
-                              _selectedDate!,
-                            ), // since we know that the _selectedDate can not be null, we have put in an additional emphassis with !
-                    ),
-                    IconButton(
-                      onPressed: _showDateModal,
-                      icon: const Icon(Icons.date_range),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              DropdownButton(
-                value: _selectedCategoryValue,
-                items: Category.values
-                    .map(
-                      (category) => DropdownMenuItem(
-                        value: category,
-                        child: Text(category.name),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        label: Text("Amount (in \$)"),
+                        prefixText: "\$ ",
                       ),
-                    )
-                    .toList(),
-                onChanged: _setCategory,
+                      keyboardType: TextInputType.number,
+                      maxLength: 7,
+                      controller: _amountController,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      children: [
+                        Text(
+                          (_selectedDate == null)
+                              ? "No Date selected"
+                              : dateFormat.format(
+                                  _selectedDate!,
+                                ), // since we know that the _selectedDate can not be null, we have put in an additional emphassis with !
+                        ),
+                        IconButton(
+                          onPressed: _showDateModal,
+                          icon: const Icon(Icons.date_range),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  DropdownButton(
+                    value: _selectedCategoryValue,
+                    items: Category.values
+                        .map(
+                          (category) => DropdownMenuItem(
+                            value: category,
+                            child: Text(category.name),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: _setCategory,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: _submitExpenseCheck,
+                    child: const Text("Submit"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Close"),
+                  ),
+                ],
               ),
             ],
           ),
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: _submitExpenseCheck,
-                child: const Text("Submit"),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text("Close"),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }

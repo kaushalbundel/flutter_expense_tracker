@@ -98,6 +98,7 @@ class _ExpensesState extends State<Expenses> {
   // method to add an overlay button when the add button is pressed
   void _addBottomModal() {
     showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
       builder: (ctx) {
@@ -108,11 +109,16 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    // Device responsiveness: The placement of the widget should change whenever the device orientation changes
+    // The Column widget which shows the graph and the list of expenses should be changed to a Row
+
+    final width = MediaQuery.sizeOf(context).width;
+
     // adding a default value to the expense screen so that when there are no expenses there are still some details visible
     Widget mainContent = const Center(child: Text("Please add new expenses."));
     // logic for capturing the main content when there are no expense in the expense list (registeredExpenses)
     // if (registeredExpenses.isNotEmpty) {
-    //   mainContent = ExpenseListView(
+    //   mainContent = ExpenseListView (
     //     listExpenses: registeredExpenses,
     //     onRemovalExpense: _expenseRemove,
     //   );
@@ -134,22 +140,41 @@ class _ExpensesState extends State<Expenses> {
     //   ),
     // );
     if (registeredExpenses.isNotEmpty) {
-      mainContent = Column(
-        children: [
-          Container(
-            height: 250.0,
-            padding: const EdgeInsets.all(16),
-            child: Chart(expenses: registeredExpenses),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: ExpenseListView(
-              listExpenses: registeredExpenses,
-              onRemovalExpense: _expenseRemove,
-            ),
-          ),
-        ],
-      );
+      mainContent = width < 600
+          ? Column(
+              children: [
+                Container(
+                  height: 250.0,
+                  padding: const EdgeInsets.all(16),
+                  child: Chart(expenses: registeredExpenses),
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: ExpenseListView(
+                    listExpenses: registeredExpenses,
+                    onRemovalExpense: _expenseRemove,
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Container(
+                  width:
+                      width *
+                      0.6, // the chart should occupy 60% of the screen's width
+                  padding: const EdgeInsets.all(16),
+                  child: Chart(expenses: registeredExpenses),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: ExpenseListView(
+                    listExpenses: registeredExpenses,
+                    onRemovalExpense: _expenseRemove,
+                  ),
+                ),
+              ],
+            );
     }
     return Scaffold(
       appBar: AppBar(
